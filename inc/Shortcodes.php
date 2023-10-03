@@ -24,14 +24,8 @@ if( !class_exists('MCDShortcodes') ) {
 			add_shortcode( 'mycentermap2', array( $this, 'mapit2_shortcode' ) );
 			add_shortcode( 'mcd_search_form', array( $this, 'mcd_search_form' ) );
 			add_shortcode( 'mcd_slider', array( $this, 'mcd_slider' ) );
-			add_shortcode( 'mcd_instagram_gallery', array( $this, 'mcd_instagram_gallery' ) );
 			add_shortcode( 'mcd_opening_hours_week', array( $this, 'mcd_opening_hours_week' ) );
 			add_shortcode( 'mcd_opening_hours_today', array( $this, 'mcd_opening_hours_today' ) );
-
-			if( !empty($this->mcd_settings['sharerails_api_key']) ) {
-				add_shortcode( 'mycentershopping', array( $this, 'mycentershopping' ) );
-				add_shortcode( 'mcp_shopping_guide', array( $this, 'shopping_guide_shortcode' ) );
-			}
 
 			add_filter( 'query_vars', array( $this, 'add_rewrite_vars' ) );
 			add_action( 'template_redirect', array( $this, 'single_page_rewrite_catch' ) );
@@ -41,18 +35,6 @@ if( !class_exists('MCDShortcodes') ) {
 			add_filter( 'wp_head', array( $this, 'dynamic_styles_scripts') );
 			add_action( 'init', array( $this, 'mcd_flush_rewrite_rules' ) );
 
-			add_action( 'wp_ajax_sharerails_products_fetch', array( $this, 'sharerails_products_fetch' ) );
-			add_action( 'wp_ajax_nopriv_sharerails_products_fetch', array( $this, 'sharerails_products_fetch' ) );
-
-			add_action( 'wp_ajax_sharerails_retailers_fetch', array( $this, 'sharerails_retailers_fetch' ) );
-			add_action( 'wp_ajax_nopriv_sharerails_retailers_fetch', array( $this, 'sharerails_retailers_fetch' ) );
-
-			add_action( 'wp_ajax_sharerails_articles_fetch', array( $this, 'sharerails_articles_fetch' ) );
-			add_action( 'wp_ajax_nopriv_sharerails_articles_fetch', array( $this, 'sharerails_articles_fetch' ) );
-
-			add_action( 'wp_ajax_sharerails_retailer_categories', array( $this, 'sharerails_retailer_categories' ) );
-			add_action( 'wp_ajax_nopriv_sharerails_retailer_categories', array( $this, 'sharerails_retailer_categories' ) );
-
 			add_filter( 'theme_page_templates', array( $this, 'links_page_template' ) );
 			add_filter( 'template_include', array( $this, 'links_change_page_template' ) );
 
@@ -60,68 +42,6 @@ if( !class_exists('MCDShortcodes') ) {
 			add_filter( 'wpseo_title', array( $this, 'change_page_title' ), 999 );
 			add_filter( 'pre_get_document_title', array( $this, 'change_page_title' ) );
     }
-
-		function sharerails_api_fetch($endpoint, $params = array()) {
-			$base_url = 'https://api.sharerails.com/v1.0/';
-			$endpoint = $base_url.$endpoint;
-
-			$count = 0;
-			foreach( $params as $key=>$value ) {
-				if( is_array($value) ) {
-					foreach($value as $key2=>$value2) {
-						$endpoint .= ($count==0?'?':'&').$key.'['.$key2.']='.$value2;
-						$count++;
-					}
-				} else {
-					$endpoint .= ($count==0?'?':'&').$key.'='.$value;	
-					$count++;
-				}
-			}
-
-			$args = array(
-				'sslverify' => false,
-				'headers' => array(
-					'Content-Type' => 'application/x-www-form-urlencoded',
-					'Authorization' => $this->mcd_settings['sharerails_api_key'],
-					'Accept-Language' => 'en',
-				),
-			);
-			$req = wp_remote_get($endpoint, $args);
-			$body = wp_remote_retrieve_body($req);
-			$data = json_decode($body, true);
-			return $data;
-		}
-
-		// The below 3 functions seems like code repetition,
-		// but it allows us to change parameters and add other logics
-		// for different API endpoint calls. We used to do it earlier
-		// but later I removed it, but keep the code separate for each call
-		// so in future we might need to add some logics in here
-		function sharerails_products_fetch() {
-			$response = $this->sharerails_api_fetch($_POST['endpoint'], $_POST['params']);
-			wp_send_json($response);
-		}
-
-		function sharerails_retailers_fetch() {
-			$response = array();
-			if( !empty($this->mcd_settings['sharerails_api_key']) ) {
-				$response = $this->sharerails_api_fetch($_POST['endpoint'], $_POST['params']);
-			}
-			wp_send_json($response);
-		}
-
-		function sharerails_articles_fetch() {
-			$response = array();
-			if( !empty($this->mcd_settings['sharerails_api_key']) ) {
-				$response = $this->sharerails_api_fetch($_POST['endpoint'], $_POST['params'], true);
-			}
-			wp_send_json($response);
-		}
-
-		function sharerails_retailer_categories() {
-			$response = $this->sharerails_api_fetch($_POST['endpoint'], $_POST['params']);
-			wp_send_json($response);
-		}
 
 		function mcd_flush_rewrite_rules() {
 			global $wp_rewrite;
@@ -209,14 +129,6 @@ if( !class_exists('MCDShortcodes') ) {
 			return $this->return_include_output( MCD_PLUGIN_PATH . 'templates/blog/index.php' );
 		}
 
-		function shopping_guide_shortcode($shortcode_atts) {
-			global $mcd_settings;
-			$atts = shortcode_atts( array(), $shortcode_atts );
-			$this->mcd_settings['shopping_guide_shortcode_atts'] = $atts;
-
-			return $this->return_include_output( MCD_PLUGIN_PATH . 'templates/articles/index.php' );
-		}
-
 		function mapit2_shortcode() {
 			if ( !is_admin() ) {
 				return $this->return_include_output( MCD_PLUGIN_PATH . 'templates/map/index.php' );
@@ -278,26 +190,6 @@ if( !class_exists('MCDShortcodes') ) {
 			return $this->return_include_output( MCD_PLUGIN_PATH . 'templates/slider/index.php' );
 		}
 
-		function mcd_instagram_gallery($shortcode_atts) {
-			$atts = shortcode_atts(
-				array(
-					'count' => MCD_INSTAGRAM_POSTS_COUNT,
-					'slider' => 'no',
-				),
-			$shortcode_atts );
-
-			$this->mcd_settings['instagram_gallery_shortcode_atts'] = $atts;
-
-			$api_call_url = MCD_INSTAGRAM_POSTS.'?center='.$this->mcd_settings['center_id'];
-			$api_response = mcd_api_data($api_call_url);
-			if( is_array($api_response) && count($api_response) > 0 ) {
-				$instagram_posts = array_splice($api_response['posts'], 0, $atts['count']);
-				$this->mcd_settings['instagram_account_info'] = $api_response['account_info'];
-				$this->mcd_settings['instagram_posts'] = $instagram_posts;
-				return $this->return_include_output( MCD_PLUGIN_PATH . 'templates/instagram/gallery.php' );
-			}
-		}
-
 		function mcd_opening_hours_week($shortcode_atts) {
 			$atts = shortcode_atts(
 				array(
@@ -339,18 +231,6 @@ if( !class_exists('MCDShortcodes') ) {
 			}
 		}
 
-		function mycentershopping($shortcode_atts) {
-			$atts = shortcode_atts(
-				array(
-					// 'show_today' => true,
-				),
-			$shortcode_atts );
-
-			$this->mcd_settings['mycentershopping_shortcode_atts'] = $atts;
-
-			return $this->return_include_output( MCD_PLUGIN_PATH . 'templates/shop/index.php' );
-		}
-
 		function add_rewrite_vars( $vars ) {
 			$vars[] = 'mycenterdeal';
 			$vars[] = 'mycenterstore';
@@ -359,8 +239,6 @@ if( !class_exists('MCDShortcodes') ) {
 			$vars[] = 'mycenterblogpost';
 			$vars[] = 'mycentersearch';
 			$vars[] = 'mcdmapretailer';
-			$vars[] = 'mycenterproduct';
-			$vars[] = 'mycenterarticle';
 			return $vars;
 		}
 
@@ -414,20 +292,6 @@ if( !class_exists('MCDShortcodes') ) {
 				'index.php?page_id='.$this->mcd_settings['map_page'].'&mcdmapretailer=$matches[1]',
 				'top'
 			);
-
-			add_rewrite_tag( '%mycenterproduct%', '([^&]+)' );
-			add_rewrite_rule(
-				'^'.$saved_options['product_single_page_slug'].'/([^/]*)/?',
-				'index.php?page_id='.$this->mcd_settings['product_single_page_template'].'&mycenterproduct=$matches[1]',
-				'top'
-			);
-
-			add_rewrite_tag( '%mycenterarticle%', '([^&]+)' );
-			add_rewrite_rule(
-				'^'.$saved_options['article_single_page_slug'].'/([^/]*)/?',
-				'index.php?page_id='.$this->mcd_settings['article_single_page_template'].'&mycenterarticle=$matches[1]',
-				'top'
-			);
 		}
 
 		function single_page_rewrite_catch() {
@@ -455,12 +319,6 @@ if( !class_exists('MCDShortcodes') ) {
 			if( isset($_GET['mcdmapretailer']) ) {
 				wp_redirect( home_url( "/".$this->mcd_settings['map_page']."/" ) . urlencode( get_query_var( 'mcdmapretailer' ) ) ); exit;
 			}
-			if( isset($_GET['mycenterproduct']) ) {
-				wp_redirect( home_url( "/".$this->mcd_settings['product_single_page_slug']."/" ) . urlencode( get_query_var( 'mycenterproduct' ) ) ); exit;
-			}
-			if( isset($_GET['mycenterarticle']) ) {
-				wp_redirect( home_url( "/".$this->mcd_settings['article_single_page_slug']."/" ) . urlencode( get_query_var( 'mycenterarticle' ) ) ); exit;
-			}
 
 			if ( array_key_exists( 'mycenterdeal', $wp_query->query_vars ) ) {
 				$this->template = 'templates/deals/single.php';
@@ -487,47 +345,6 @@ if( !class_exists('MCDShortcodes') ) {
 				$req_url = MCD_API_MAP_CONFIG.'?center='.$this->mcd_settings['center_id'];
 				$map_config = mcd_api_data($req_url);
 				$this->mcd_settings['map_config'] = $map_config;
-			} elseif ( array_key_exists( 'mycenterproduct', $wp_query->query_vars ) ) {
-				if( !empty($this->mcd_settings['sharerails_api_key']) ) {
-					$this->template = 'templates/products/single.php';
-					$slug = get_query_var('mycenterproduct', 0);
-					$slug_parts = explode('-', $slug);
-					$product_id = $slug_parts[0];
-					$mycenterproduct = $this->sharerails_api_fetch('products/'.$product_id);
-					$this->mcd_settings['mycenterproduct'] = $mycenterproduct;
-	
-					$req_url = MCP_SHARERAILS_RETAILER.'/'.$mycenterproduct['retailerId'];
-					$mycenterstore = mcd_api_data($req_url);
-					if( $mycenterstore ) {
-						$this->mcd_settings['mycenterstore'] = $mycenterstore;
-					}
-
-					if( $product_id == @$mycenterproduct['id'] ) {
-						$this->page_title = mcp_page_title($mycenterproduct['title']);
-
-						mcd_include_js('angular', 'assets/angular/angular.min.js');
-						mcd_include_js('angular-sanitize', 'assets/angular/angular-sanitize.min.js');
-						mcd_include_js('angular-store', 'assets/angular/controllers/app-store.js', true);
-						mcd_include_js('select2', 'assets/plugins/select2/js/select2.min.js', true);
-						mcd_include_css('select2', 'assets/plugins/select2/css/select2.min.css', true);	
-					} else {
-						load_404();
-					}
-				} else {
-					load_404();
-				}
-			} elseif ( array_key_exists( 'mycenterarticle', $wp_query->query_vars ) ) {
-				if( !empty($this->mcd_settings['sharerails_api_key']) ) {
-					$this->template = 'templates/articles/single.php';
-					$slug = get_query_var('mycenterarticle', 0);
-					$slug_parts = explode('-', $slug);
-					$article_id = $slug_parts[0];
-					$mycenterarticle = $this->sharerails_api_fetch('articles/'.$article_id);
-					$this->mcd_settings['mycenterarticle'] = $mycenterarticle;
-					$this->page_title = mcp_page_title(@$mycenterarticle['title']);
-				} else {
-					load_404();
-				}
 			} elseif ( array_key_exists( 'mycenterevent', $wp_query->query_vars ) ) {
 				$this->template = 'templates/events/single.php';
 				mcd_include_js('add-to-calendar', 'assets/plugins/add-to-calendar.min.js', true);
@@ -679,16 +496,10 @@ if( !class_exists('MCDShortcodes') ) {
 						mcd_include_js('angular-blogposts', 'assets/angular/controllers/app-blog.js', true);
             mcd_include_js('moment', 'assets/plugins/calendar/moment.min.js', true);
 					}
-					if( has_shortcode( $post->post_content, 'mcd_slider') || has_shortcode( $post->post_content, 'mcd_instagram_gallery') ) {
+					if( has_shortcode( $post->post_content, 'mcd_slider') ) {
 						mcd_include_js('owl-carousel', 'assets/plugins/owl/owl.carousel.min.js', true);
 						mcd_include_css('owl-carousel', 'assets/plugins/owl/assets/owl.carousel.min.css');
 						mcd_include_css('owl-carousel-theme', 'assets/plugins/owl/assets/owl.theme.default.min.css');
-					}
-					if( has_shortcode( $post->post_content, 'mycentershopping') ) {
-						mcd_include_js('angular-sharerails-retailers', 'assets/angular/controllers/app-shop.js', true);
-					}
-					if( has_shortcode( $post->post_content, 'mcp_shopping_guide') ) {
-						mcd_include_js('angular-sharerails-articles', 'assets/angular/controllers/app-articles.js', true);
 					}
 					
 					mcd_include_js('angular-functions', 'assets/angular/common/functions.js', true);
@@ -710,7 +521,6 @@ if( !class_exists('MCDShortcodes') ) {
 				'mycenterblog',
 				'mycentermap2',
 				'mcd_slider',
-				'mcd_instagram_gallery',
 				'mcd_opening_hours_week',
 				'mycentershopping',
 				'mcp_shopping_guide',
@@ -739,8 +549,6 @@ if( !class_exists('MCDShortcodes') ) {
 				'mycentercareer',
 				'mycenterblogpost',
 				'mycentersearch',
-				'mycenterproduct',
-				'mycenterarticle',
 			);
 			$response = false;
 			foreach ($query_strings as $query_string) {

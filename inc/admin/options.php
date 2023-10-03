@@ -256,18 +256,6 @@ require_once $redux_admin_path . 'sections/stores/store.php';
 Redux::set_section(
 	$opt_name,
 	array(
-		'title' => __( 'Products', 'redux-framework-demo' ),
-		'id' => 'products_settings_main',
-		'icon' => 'el el-shopping-cart',
-	)
-);
-require_once $redux_admin_path . 'sections/products/index.php';
-require_once $redux_admin_path . 'sections/products/single.php';
-
-
-Redux::set_section(
-	$opt_name,
-	array(
 		'title' => __( 'Events', 'redux-framework-demo' ),
 		'id' => 'events_settings_main',
 		'icon' => 'el el-calendar',
@@ -300,19 +288,9 @@ Redux::set_section(
 require_once $redux_admin_path . 'sections/blog/blogs.php';
 require_once $redux_admin_path . 'sections/blog/blog.php';
 
-require_once $redux_admin_path . 'sections/shopping-guide/index.php';
-require_once $redux_admin_path . 'sections/shopping-guide/single.php';
-
-
 require_once $redux_admin_path . 'sections/map/map.php';
 
-
 require_once $redux_admin_path . 'sections/search/search.php';
-
-
-require_once $redux_admin_path . 'sections/instagram/instagram.php';
-
-require_once $redux_admin_path . 'sections/sharerails/index.php';
 
 require_once $redux_admin_path . 'sections/shortcodes/shortcodes.php';
 

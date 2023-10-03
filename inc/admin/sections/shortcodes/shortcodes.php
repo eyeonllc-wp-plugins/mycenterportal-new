@@ -30,11 +30,8 @@ function mcd_common_html() {
 	return '
 		<p><code><strong>[mycenterdeals]</strong></code> - Display Deals of selected Center.</p>
 		<p><code><strong>[mycentercareers]</strong></code> - Display Careers of selected Center.</p>
-		<p><code><strong>[mycentershopping]</strong></code> - Display ShareRails retailers to Shop.</p>
 		<br>
 		<p><code><strong>[mycentermap2]</strong></code> - MapIT2 (ThreeJS).</p>
-		<br>
-		<p><code><strong>[mcp_shopping_guide]</strong></code> - Shopping Guide Articles.</p>
 		<br>
 		<p><code><strong>[mcd_search_form style="light"]</strong></code> - Display Search Form. <strong><code>style</code></strong> can be "light" or "dark".</p>
 	';
@@ -84,17 +81,6 @@ function mcd_blogs_html() {
 		<div style="padding-top:6px;margin-left:30px;">
 			<strong>Optional Parameters:</strong><br>
 			<p><code><strong>filters</strong></code>: "yes" or "no". <em>Default: "no"</em></p>
-		</div>
-	';
-}
-
-function mcd_instagram_gallery_html() {
-	return '
-		<p><code><strong>[mcd_instagram_gallery]</strong></code> - Display a Gallery with Instagram posts.</p>
-		<div style="padding-top:6px;margin-left:30px;">
-			<strong>Optional Parameters:</strong><br>
-			<p><code><strong>count</strong></code>: "10". <em>Default: 20</em></p>
-			<p><code><strong>slider</strong></code>: "yes" or "no". <em>Default: "no"</em></p>
 		</div>
 	';
 }
@@ -175,11 +161,6 @@ Redux::set_section(
 				'id' => 'mcd_blogs_html',
 				'type' => 'raw',
 				'content' => __( mcd_blogs_html(), 'redux-framework-demo' ),
-			),
-			array(
-				'id' => 'mcd_instagram_gallery_html',
-				'type' => 'raw',
-				'content' => __( mcd_instagram_gallery_html(), 'redux-framework-demo' ),
 			),
 			array(
 				'id' => 'mcd_slider_html',

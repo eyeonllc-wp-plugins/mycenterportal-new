@@ -79,12 +79,6 @@ if( isset($mycenterstore['next']) ) {
 			</div>
 		</div>
 
-		<?php if( !empty($this->mcd_settings['sharerails_api_key']) && $mycenterstore['sharerail_retailer_id'] != null ) : ?>
-			<div ng-app="MyCenterPortalApp">
-				<?php include(MCD_PLUGIN_PATH.'templates/stores/single/products.php') ?>
-			</div>
-		<?php endif; ?>
-
 		<?php include(MCD_PLUGIN_PATH.'templates/stores/single/deals.php') ?>
 	<?php endif; ?>
 </div>

@@ -3,8 +3,7 @@
 Plugin Name: MyCenterPortal (New)
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal. (new)
-Description: Fetch Deals, Store, Events, Careers, Blog, Products Shop, Instagram Feed, etc. from mycenterportal.com to generate various pages for a Shopping Mall website.
-Version: 0.0.4
+Version: 0.0.5
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
@@ -61,18 +60,10 @@ defined('MCD_API_MAP_CONFIG')	  OR define( 'MCD_API_MAP_CONFIG', API_BASE_URL . 
 
 defined('MCD_API_SEARCH')			  OR define( 'MCD_API_SEARCH', API_BASE_URL . 'api/search' );
 
-defined('MCD_INSTAGRAM_POSTS')		OR define( 'MCD_INSTAGRAM_POSTS', API_BASE_URL . 'api/instagram/posts' );
-defined('MCD_INSTAGRAM_POSTS_COUNT')OR define( 'MCD_INSTAGRAM_POSTS_COUNT', 30 );
-
 defined('MCD_OPENING_HOURS_WEEK')	OR define( 'MCD_OPENING_HOURS_WEEK', API_BASE_URL . 'api/opening-hours/week' );
 defined('MCD_OPENING_HOURS_TODAY')	OR define( 'MCD_OPENING_HOURS_TODAY', API_BASE_URL . 'api/opening-hours/today' );
 
-defined('MCP_SHARERAILS_RETAILERS')	OR define( 'MCP_SHARERAILS_RETAILERS', API_BASE_URL . 'api/sharerails/featured-retailers' );
-defined('MCP_SHARERAILS_RETAILER')	OR define( 'MCP_SHARERAILS_RETAILER', API_BASE_URL . 'api/sharerails/get-retailer' );
-
 defined('MCP_API_LINKS')			OR define( 'MCP_API_LINKS', API_BASE_URL.'api/links' );
-
-defined('MCP_CURRENCY')				OR define( 'MCP_CURRENCY', $mcd_settings['sharerails_currency'] );
 
 add_theme_support( 'title-tag' );
 

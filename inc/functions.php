@@ -91,10 +91,6 @@ function mcd_single_page_url($var) {
 		$url .= $mcd_settings['careers_single_page_slug'];
 	} elseif( $var == 'mycenterblogpost' ) {
 		$url .= $mcd_settings['blog_single_page_slug'];
-	} elseif( $var == 'mycenterproduct' ) {
-		$url .= $mcd_settings['product_single_page_slug'];
-	} elseif( $var == 'mycenterarticle' ) {
-		$url .= $mcd_settings['article_single_page_slug'];
 	}
 	$url .= '/';
 	return $url;
