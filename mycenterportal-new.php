@@ -4,11 +4,10 @@ Plugin Name: MyCenterPortal (New)
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal. (new)
 Description: Fetch Deals, Store, Events, Careers, Blog, Products Shop, Instagram Feed, etc. from mycenterportal.com to generate various pages for a Shopping Mall website.
-Version: 0.0.2
+Version: 0.0.3
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
-Text Domain: my-center-deals
 */
 
 require 'plugin-update-checker/plugin-update-checker.php';
